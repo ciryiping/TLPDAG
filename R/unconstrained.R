@@ -10,15 +10,16 @@
 #' @return Estimated adjacency matrix and Estimated error variances for each node
 #' @keywords DAGun
 #' @export
+#' @useDynLib TLPDAG uncon_dag_
 #' @examples
 #' m=50
 #' amat <- matrix(0, m, m)
 #' amat[2:m,1]<- 1 #(rbinom((m-1),1,0.5)-0.5)*runif((m-1),0.5,2)
 #' sigma <- seq(1,0.5,length.out=m)
 #' X <- rmvDAG(n,amat,sigma)
-#' out<-DAGun(X,5,0.01)
+#' out<-uncon_dag(X,5,0.01)
 
-DAGun <- function(X,lambda,tau,B=NULL,A0=NULL,opts.tol=1e-4){
+uncon_dag <- function(X,lambda,tau,B=NULL,A0=NULL,opts.tol=1e-4){
   # B is the initial nonzero pattern
   # A0 is the inital value for A
   m = ncol(X)
@@ -50,7 +51,7 @@ DAGun <- function(X,lambda,tau,B=NULL,A0=NULL,opts.tol=1e-4){
   for(i in 1:m){
     XTX_inv[,,i] <- solve((XTX[-i,-i] + rho2*diag(m-1)))
   }
-  out=.C("DAG_uncon",as.double(X), A=as.double(A0),as.integer(m), as.integer(n), as.double(lambda),
+  out=.C("uncon_dag_",as.double(X), A=as.double(A0),as.integer(m), as.integer(n), as.double(lambda),
          as.double(tau), as.integer(B),as.integer(nonzero), sigma=as.double(sigma),as.double(opts.tol),
          obj=as.double(0),as.double(XTX),as.double(XTX_inv),as.double(rho),as.double(rho2))
   
@@ -59,7 +60,7 @@ DAGun <- function(X,lambda,tau,B=NULL,A0=NULL,opts.tol=1e-4){
   obj1 <- out$obj
   #try reversing all edges
   if(nonzero<=15 && nonzero >=2){
-    out2 = .C("DAG_uncon",as.double(X), A=as.double(zeros),as.integer(m), as.integer(n), as.double(lambda),
+    out2 = .C("uncon_dag_",as.double(X), A=as.double(zeros),as.integer(m), as.integer(n), as.double(lambda),
               as.double(tau), as.integer(t(Bout)),as.integer(nonzero), sigma=as.double(sigma),as.double(opts.tol),
               obj=as.double(0),as.double(XTX),as.double(XTX_inv),as.double(rho),as.double(rho2))
     if(out2$obj < obj1) out=out2
