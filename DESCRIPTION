@@ -1,13 +1,13 @@
 Package: TLPDAG
 Type: Package
 Title: Maximum likelihood estimation of a directed acyclic graph with truncated L1 penalty
-Version: 0.0.0.9000
+Version: 0.0.1
 Authors@R: c(
 		person("Yiping", "Yuan", , "ciryiping@gmail.com", role = c("aut", "cre")),
 		person("Si", "Peng", , "pengx179@umn.edu", role = "aut")
 		)
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
-License: MIT + file LICENSE
+Description:  A method of learning a Gaussian directed acyclic graph model 
+	using a maximum likelihood estimation with truncated L1 penalty
+License: MIT
 LazyData: TRUE
 RoxygenNote: 6.0.1
